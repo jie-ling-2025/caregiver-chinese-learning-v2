@@ -72,7 +72,8 @@ function playAudio(audioPath) {
 
   window.speechSynthesis?.cancel();
 
-  const audio = new Audio(audioPath);
+  const audioUrl = `${import.meta.env.BASE_URL}${audioPath.replace(/^\//, '')}`;
+  const audio = new Audio(audioUrl);
 
   audio.addEventListener('error', () => {
     alert('此句尚未加入越南語音檔');
