@@ -1,0 +1,217 @@
+[
+  {
+    "id": "daily-001",
+    "category": "日常問候",
+    "chinese": "早安，昨晚睡得好嗎？",
+    "vietnamese": "Chào buổi sáng, tối qua cô/chú ngủ ngon không?",
+    "pinyin": "Zǎo ān, zuó wǎn shuì de hǎo ma?",
+    "viAudio": "/audio/vi/001.mp3"
+  },
+  {
+    "id": "daily-002",
+    "category": "日常問候",
+    "chinese": "今天感覺怎麼樣？",
+    "vietnamese": "Hôm nay cô/chú cảm thấy thế nào?",
+    "pinyin": "Jīn tiān gǎn jué zěn me yàng?",
+    "viAudio": "/audio/vi/002.mp3"
+  },
+  {
+    "id": "daily-003",
+    "category": "日常問候",
+    "chinese": "我來幫您整理房間。",
+    "vietnamese": "Tôi đến giúp cô/chú dọn phòng.",
+    "pinyin": "Wǒ lái bāng nín zhěng lǐ fáng jiān.",
+    "viAudio": "/audio/vi/003.mp3"
+  },
+  {
+    "id": "daily-004",
+    "category": "日常問候",
+    "chinese": "請稍等一下，我馬上回來。",
+    "vietnamese": "Xin chờ một chút, tôi sẽ quay lại ngay.",
+    "pinyin": "Qǐng shāo děng yí xià, wǒ mǎ shàng huí lái.",
+    "viAudio": "/audio/vi/004.mp3"
+  },
+  {
+    "id": "meal-001",
+    "category": "飲食照護",
+    "chinese": "現在要吃早餐了。",
+    "vietnamese": "Bây giờ đến giờ ăn sáng rồi.",
+    "pinyin": "Xiàn zài yào chī zǎo cān le.",
+    "viAudio": "/audio/vi/005.mp3"
+  },
+  {
+    "id": "meal-002",
+    "category": "飲食照護",
+    "chinese": "請慢慢吃，不要急。",
+    "vietnamese": "Xin ăn từ từ, đừng vội.",
+    "pinyin": "Qǐng màn màn chī, bú yào jí."
+  },
+  {
+    "id": "meal-003",
+    "category": "飲食照護",
+    "chinese": "您想喝水嗎？",
+    "vietnamese": "Cô/chú có muốn uống nước không?",
+    "pinyin": "Nín xiǎng hē shuǐ ma?"
+  },
+  {
+    "id": "meal-004",
+    "category": "飲食照護",
+    "chinese": "這個菜會不會太硬？",
+    "vietnamese": "Món này có cứng quá không?",
+    "pinyin": "Zhè ge cài huì bú huì tài yìng?"
+  },
+  {
+    "id": "meal-005",
+    "category": "飲食照護",
+    "chinese": "我幫您擦嘴巴。",
+    "vietnamese": "Tôi giúp cô/chú lau miệng.",
+    "pinyin": "Wǒ bāng nín cā zuǐ ba."
+  },
+  {
+    "id": "health-001",
+    "category": "身體狀況",
+    "chinese": "您哪裡不舒服？",
+    "vietnamese": "Cô/chú thấy khó chịu ở đâu?",
+    "pinyin": "Nín nǎ lǐ bù shū fú?"
+  },
+  {
+    "id": "health-002",
+    "category": "身體狀況",
+    "chinese": "會痛嗎？",
+    "vietnamese": "Có đau không?",
+    "pinyin": "Huì tòng ma?"
+  },
+  {
+    "id": "health-003",
+    "category": "身體狀況",
+    "chinese": "請告訴我痛的位置。",
+    "vietnamese": "Xin cho tôi biết vị trí đau.",
+    "pinyin": "Qǐng gào sù wǒ tòng de wèi zhì."
+  },
+  {
+    "id": "health-004",
+    "category": "身體狀況",
+    "chinese": "我幫您量體溫。",
+    "vietnamese": "Tôi giúp cô/chú đo nhiệt độ.",
+    "pinyin": "Wǒ bāng nín liáng tǐ wēn."
+  },
+  {
+    "id": "health-005",
+    "category": "身體狀況",
+    "chinese": "我會通知護理師。",
+    "vietnamese": "Tôi sẽ báo cho điều dưỡng.",
+    "pinyin": "Wǒ huì tōng zhī hù lǐ shī."
+  },
+  {
+    "id": "mobility-001",
+    "category": "移位活動",
+    "chinese": "我扶您起來。",
+    "vietnamese": "Tôi đỡ cô/chú đứng dậy.",
+    "pinyin": "Wǒ fú nín qǐ lái."
+  },
+  {
+    "id": "mobility-002",
+    "category": "移位活動",
+    "chinese": "請慢慢站起來。",
+    "vietnamese": "Xin từ từ đứng lên.",
+    "pinyin": "Qǐng màn màn zhàn qǐ lái."
+  },
+  {
+    "id": "mobility-003",
+    "category": "移位活動",
+    "chinese": "請坐穩，不要往前傾。",
+    "vietnamese": "Xin ngồi vững, đừng nghiêng về phía trước.",
+    "pinyin": "Qǐng zuò wěn, bú yào wǎng qián qīng."
+  },
+  {
+    "id": "mobility-004",
+    "category": "移位活動",
+    "chinese": "我們要去復健室。",
+    "vietnamese": "Chúng ta sẽ đến phòng phục hồi chức năng.",
+    "pinyin": "Wǒ men yào qù fù jiàn shì."
+  },
+  {
+    "id": "mobility-005",
+    "category": "移位活動",
+    "chinese": "走路時請看前面。",
+    "vietnamese": "Khi đi xin nhìn phía trước.",
+    "pinyin": "Zǒu lù shí qǐng kàn qián miàn."
+  },
+  {
+    "id": "clean-001",
+    "category": "清潔盥洗",
+    "chinese": "現在要刷牙洗臉了。",
+    "vietnamese": "Bây giờ đến giờ đánh răng rửa mặt rồi.",
+    "pinyin": "Xiàn zài yào shuā yá xǐ liǎn le."
+  },
+  {
+    "id": "clean-002",
+    "category": "清潔盥洗",
+    "chinese": "水溫可以嗎？",
+    "vietnamese": "Nhiệt độ nước có được không?",
+    "pinyin": "Shuǐ wēn kě yǐ ma?"
+  },
+  {
+    "id": "clean-003",
+    "category": "清潔盥洗",
+    "chinese": "我幫您洗手。",
+    "vietnamese": "Tôi giúp cô/chú rửa tay.",
+    "pinyin": "Wǒ bāng nín xǐ shǒu."
+  },
+  {
+    "id": "clean-004",
+    "category": "清潔盥洗",
+    "chinese": "請換上乾淨的衣服。",
+    "vietnamese": "Xin thay quần áo sạch.",
+    "pinyin": "Qǐng huàn shàng gān jìng de yī fú."
+  },
+  {
+    "id": "toilet-001",
+    "category": "如廁照護",
+    "chinese": "您想上廁所嗎？",
+    "vietnamese": "Cô/chú có muốn đi vệ sinh không?",
+    "pinyin": "Nín xiǎng shàng cè suǒ ma?"
+  },
+  {
+    "id": "toilet-002",
+    "category": "如廁照護",
+    "chinese": "我陪您去廁所。",
+    "vietnamese": "Tôi đi cùng cô/chú đến nhà vệ sinh.",
+    "pinyin": "Wǒ péi nín qù cè suǒ."
+  },
+  {
+    "id": "toilet-003",
+    "category": "如廁照護",
+    "chinese": "請扶好扶手。",
+    "vietnamese": "Xin nắm chắc tay vịn.",
+    "pinyin": "Qǐng fú hǎo fú shǒu."
+  },
+  {
+    "id": "medicine-001",
+    "category": "用藥提醒",
+    "chinese": "現在要吃藥了。",
+    "vietnamese": "Bây giờ đến giờ uống thuốc rồi.",
+    "pinyin": "Xiàn zài yào chī yào le."
+  },
+  {
+    "id": "medicine-002",
+    "category": "用藥提醒",
+    "chinese": "請配一點水吞下去。",
+    "vietnamese": "Xin uống với một chút nước rồi nuốt xuống.",
+    "pinyin": "Qǐng pèi yì diǎn shuǐ tūn xià qù."
+  },
+  {
+    "id": "safety-001",
+    "category": "安全提醒",
+    "chinese": "請不要自己下床。",
+    "vietnamese": "Xin đừng tự xuống giường.",
+    "pinyin": "Qǐng bú yào zì jǐ xià chuáng."
+  },
+  {
+    "id": "safety-002",
+    "category": "安全提醒",
+    "chinese": "需要幫忙請按鈴。",
+    "vietnamese": "Nếu cần giúp đỡ, xin bấm chuông.",
+    "pinyin": "Xū yào bāng máng qǐng àn líng."
+  }
+]
