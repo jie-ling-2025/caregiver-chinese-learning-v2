@@ -4,9 +4,12 @@ import {
   CalendarDays,
   CheckCircle2,
   Cloud,
+  FolderPlus,
   ListFilter,
+  Menu,
   Plus,
   RefreshCw,
+  X,
   Volume2,
 } from 'lucide-react';
 import fallbackPhrases from './data/phrases.json';
@@ -14,25 +17,15 @@ import fallbackPhrases from './data/phrases.json';
 const GAS_ENDPOINT =
   'https://script.google.com/macros/s/AKfycbzCrERurUtlAyvl8nxCTVn0gUthzsAUCBKHGnK08EibkW3w656EKX6qtpxZyG1TtBE4/exec';
 
-const CATEGORIES = [
-  '日常問候',
-  '稱謂與人員',
-  '飲食',
-  '生活用品',
-  '身體不適',
-  '清潔與如廁',
-  '翻身與移位',
-  '安全提醒',
-  '其他',
-];
-
 const PENDING_SUBMISSIONS_KEY =
   'caregiver-chinese-learning-v2-pending-submissions';
 
 function normalizePhrase(phrase, source) {
+  const category = String(phrase.category ?? '').trim();
+
   return {
     id: String(phrase.id ?? `${source}-${Date.now()}`),
-    category: CATEGORIES.includes(phrase.category) ? phrase.category : '其他',
+    category: category || '其他',
     vietnamese: String(phrase.vietnamese ?? '').trim(),
     chinese: String(phrase.chinese ?? '').trim(),
     submitter: String(phrase.submitter ?? '').trim(),
@@ -160,14 +153,18 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [officialPhrases, setOfficialPhrases] = useState([]);
   const [pendingSubmissions, setPendingSubmissions] = useState(loadPendingSubmissions);
+  const [customCategories, setCustomCategories] = useState([]);
   const [lastUpdated, setLastUpdated] = useState('');
   const [loadState, setLoadState] = useState('loading');
   const [loadMessage, setLoadMessage] = useState('');
   const [refreshCount, setRefreshCount] = useState(0);
   const [submitState, setSubmitState] = useState('idle');
   const [submitMessage, setSubmitMessage] = useState('');
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
   const [formData, setFormData] = useState({
-    category: CATEGORIES[0],
+    category: '',
     vietnamese: '',
     chinese: '',
     submitter: '',
@@ -254,6 +251,25 @@ function App() {
     return [...officialPhrases, ...visiblePendingSubmissions];
   }, [officialPhrases, visiblePendingSubmissions]);
 
+  const categories = useMemo(() => {
+    const phraseCategories = allPhrases.map((phrase) => phrase.category);
+    return Array.from(new Set(phraseCategories))
+      .map((category) => category.trim())
+      .filter(Boolean);
+  }, [allPhrases]);
+
+  const formCategoryOptions = useMemo(() => {
+    return Array.from(new Set([...categories, ...customCategories, formData.category]))
+      .map((category) => category.trim())
+      .filter(Boolean);
+  }, [categories, customCategories, formData.category]);
+
+  useEffect(() => {
+    if (selectedCategory !== '全部' && !categories.includes(selectedCategory)) {
+      setSelectedCategory('全部');
+    }
+  }, [categories, selectedCategory]);
+
   const filteredPhrases = useMemo(() => {
     if (selectedCategory === '全部') {
       return allPhrases;
@@ -272,6 +288,40 @@ function App() {
       ...current,
       [field]: value,
     }));
+  }
+
+  function saveCustomCategory(categoryName) {
+    const category = categoryName.trim();
+
+    if (!category) {
+      return;
+    }
+
+    setCustomCategories((current) => {
+      if (current.includes(category) || formCategoryOptions.includes(category)) {
+        return current;
+      }
+
+      return [...current, category];
+    });
+    setFormData((current) => ({
+      ...current,
+      category,
+    }));
+    setNewCategoryName('');
+  }
+
+  function openAddModal(category = formData.category) {
+    const nextCategory =
+      category === '全部' ? formData.category || categories[0] || '' : category;
+
+    setFormData((current) => ({
+      ...current,
+      category: nextCategory,
+    }));
+    setSubmitState('idle');
+    setSubmitMessage('');
+    setIsAddModalOpen(true);
   }
 
   async function submitPhrase(event) {
@@ -338,6 +388,7 @@ function App() {
       });
       setSubmitState('success');
       setSubmitMessage(result.message || '已送出，這筆資料會先顯示為待審核測試。');
+      setIsAddModalOpen(false);
     } catch (error) {
       setSubmitState('error');
       setSubmitMessage(error.message || '投稿送出失敗，請稍後再試。');
@@ -346,6 +397,27 @@ function App() {
 
   return (
     <main className="appShell">
+      <div className="topActions">
+        <button
+          className="iconTextButton"
+          type="button"
+          onClick={() => setIsCategoryOpen((isOpen) => !isOpen)}
+          aria-expanded={isCategoryOpen}
+          aria-controls="category-drawer"
+        >
+          <Menu size={22} />
+          分類
+        </button>
+        <button
+          className="iconTextButton isPrimary"
+          type="button"
+          onClick={() => openAddModal(selectedCategory)}
+        >
+          <Plus size={22} />
+          新增單字
+        </button>
+      </div>
+
       <section className="hero" aria-labelledby="site-title">
         <div className="eyebrow">越南籍照服員中文學習網站</div>
         <h1 id="site-title">長照現場常用中文</h1>
@@ -384,103 +456,51 @@ function App() {
         </button>
       </section>
 
-      <section className="panel addPanel" aria-labelledby="add-title">
-        <div className="sectionTitle">
-          <Plus size={22} />
-          <h2 id="add-title">新增單字投稿</h2>
-        </div>
-
-        <form className="addForm" onSubmit={submitPhrase}>
-          <label>
-            類別
-            <select
-              value={formData.category}
-              onChange={(event) => updateFormField('category', event.target.value)}
-            >
-              {CATEGORIES.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            越南文
-            <textarea
-              rows="2"
-              value={formData.vietnamese}
-              onChange={(event) => updateFormField('vietnamese', event.target.value)}
-              placeholder="例如：Xin chào."
-            />
-          </label>
-
-          <label>
-            中文
-            <textarea
-              rows="2"
-              value={formData.chinese}
-              onChange={(event) => updateFormField('chinese', event.target.value)}
-              placeholder="例如：你好。"
-            />
-          </label>
-
-          <label>
-            投稿者
-            <input
-              type="text"
-              value={formData.submitter}
-              onChange={(event) => updateFormField('submitter', event.target.value)}
-              placeholder="例如：Nguyen"
-            />
-          </label>
-
-          <label>
-            通關密語
-            <input
-              type="password"
-              value={formData.passphrase}
-              onChange={(event) => updateFormField('passphrase', event.target.value)}
-              placeholder="由管理者提供"
-            />
-          </label>
-
-          <button
-            className="primaryButton"
-            type="submit"
-            disabled={submitState === 'submitting'}
+      {isCategoryOpen && (
+        <div
+          className="sidebarBackdrop"
+          role="presentation"
+          onClick={() => setIsCategoryOpen(false)}
+        >
+          <aside
+            className="categorySidebar"
+            id="category-drawer"
+            aria-labelledby="filter-title"
+            onClick={(event) => event.stopPropagation()}
           >
-            <Plus size={20} />
-            {submitState === 'submitting' ? '送出中...' : '送出投稿'}
-          </button>
-        </form>
+            <div className="drawerHeader">
+              <div className="sectionTitle">
+                <ListFilter size={22} />
+                <h2 id="filter-title">類別篩選</h2>
+              </div>
+              <button
+                className="closeButton"
+                type="button"
+                onClick={() => setIsCategoryOpen(false)}
+                aria-label="隱藏側邊欄"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
-        {submitMessage && (
-          <p className={`formMessage ${submitState === 'error' ? 'isError' : 'isSuccess'}`}>
-            {submitMessage}
-          </p>
-        )}
-      </section>
-
-      <section className="panel filterPanel" aria-labelledby="filter-title">
-        <div className="sectionTitle">
-          <ListFilter size={22} />
-          <h2 id="filter-title">類別篩選</h2>
+            <div className="categoryList" aria-label="類別篩選">
+              {['全部', ...categories].map((category) => (
+                <button
+                  className={category === selectedCategory ? 'categoryButton isActive' : 'categoryButton'}
+                  key={category}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setIsCategoryOpen(false);
+                  }}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </aside>
         </div>
-
-        <div className="categoryGrid" aria-label="類別篩選">
-          {['全部', ...CATEGORIES].map((category) => (
-            <button
-              className={category === selectedCategory ? 'categoryButton isActive' : 'categoryButton'}
-              key={category}
-              type="button"
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-      </section>
+      )}
 
       <section className="summary" aria-live="polite">
         <CheckCircle2 size={18} />
@@ -523,6 +543,125 @@ function App() {
           </article>
         ))}
       </section>
+
+      {isAddModalOpen && (
+        <div className="modalBackdrop" role="presentation">
+          <section
+            className="modalPanel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="add-title"
+          >
+            <div className="modalHeader">
+              <div className="sectionTitle">
+                <Plus size={22} />
+                <h2 id="add-title">新增單字投稿</h2>
+              </div>
+              <button
+                className="closeButton"
+                type="button"
+                onClick={() => setIsAddModalOpen(false)}
+                aria-label="關閉新增單字視窗"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form className="addForm" onSubmit={submitPhrase}>
+              <label>
+                類別
+                <select
+                  value={formData.category}
+                  onChange={(event) => updateFormField('category', event.target.value)}
+                >
+                  <option value="">請選擇類別</option>
+                  {formCategoryOptions.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div className="categoryAddForm addModalCategoryForm">
+                <label>
+                  找不到類別？新增類別
+                  <span className="categoryInputRow">
+                    <input
+                      type="text"
+                      value={newCategoryName}
+                      onChange={(event) => setNewCategoryName(event.target.value)}
+                      placeholder="例如：復健"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => saveCustomCategory(newCategoryName)}
+                      aria-label="新增分類"
+                    >
+                      <FolderPlus size={20} />
+                    </button>
+                  </span>
+                </label>
+              </div>
+
+              <label>
+                越南文
+                <textarea
+                  rows="2"
+                  value={formData.vietnamese}
+                  onChange={(event) => updateFormField('vietnamese', event.target.value)}
+                  placeholder="例如：Xin chào."
+                />
+              </label>
+
+              <label>
+                中文
+                <textarea
+                  rows="2"
+                  value={formData.chinese}
+                  onChange={(event) => updateFormField('chinese', event.target.value)}
+                  placeholder="例如：你好。"
+                />
+              </label>
+
+              <label>
+                投稿者
+                <input
+                  type="text"
+                  value={formData.submitter}
+                  onChange={(event) => updateFormField('submitter', event.target.value)}
+                  placeholder="例如：Nguyen"
+                />
+              </label>
+
+              <label>
+                通關密語
+                <input
+                  type="password"
+                  value={formData.passphrase}
+                  onChange={(event) => updateFormField('passphrase', event.target.value)}
+                  placeholder="由管理者提供"
+                />
+              </label>
+
+              <button
+                className="primaryButton"
+                type="submit"
+                disabled={submitState === 'submitting'}
+              >
+                <Plus size={20} />
+                {submitState === 'submitting' ? '送出中...' : '送出投稿'}
+              </button>
+            </form>
+
+            {submitMessage && (
+              <p className={`formMessage ${submitState === 'error' ? 'isError' : 'isSuccess'}`}>
+                {submitMessage}
+              </p>
+            )}
+          </section>
+        </div>
+      )}
     </main>
   );
 }

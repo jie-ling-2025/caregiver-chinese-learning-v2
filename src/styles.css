@@ -46,6 +46,51 @@ button {
   cursor: pointer;
 }
 
+.topActions {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: -20px -14px 0;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(207, 221, 213, 0.9);
+  background: rgba(244, 247, 243, 0.94);
+  backdrop-filter: blur(10px);
+}
+
+.iconTextButton,
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #b8cbbf;
+  border-radius: 8px;
+  color: var(--green-900);
+  background: #ffffff;
+  font-weight: 900;
+}
+
+.iconTextButton {
+  min-height: 46px;
+  gap: 8px;
+  padding: 0 14px;
+  font-size: 1rem;
+}
+
+.iconTextButton.isPrimary {
+  border-color: var(--green-700);
+  color: #ffffff;
+  background: var(--green-700);
+}
+
+.closeButton {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+}
+
 .appShell {
   width: min(100%, 980px);
   margin: 0 auto;
@@ -161,12 +206,27 @@ button {
   letter-spacing: 0;
 }
 
+.drawerHeader,
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.drawerHeader .sectionTitle,
+.modalHeader .sectionTitle {
+  margin-bottom: 0;
+}
+
 .addForm {
   display: grid;
   gap: 14px;
 }
 
-.addForm label {
+.addForm label,
+.categoryAddForm label {
   display: grid;
   gap: 7px;
   color: #2b3731;
@@ -176,7 +236,8 @@ button {
 
 .addForm select,
 .addForm input,
-.addForm textarea {
+.addForm textarea,
+.categoryAddForm input {
   width: 100%;
   border: 1px solid #b9cac1;
   border-radius: 8px;
@@ -186,7 +247,8 @@ button {
 }
 
 .addForm select,
-.addForm input {
+.addForm input,
+.categoryAddForm input {
   min-height: 52px;
   padding: 0 12px;
 }
@@ -200,7 +262,8 @@ button {
 
 .addForm select:focus,
 .addForm input:focus,
-.addForm textarea:focus {
+.addForm textarea:focus,
+.categoryAddForm input:focus {
   outline: 3px solid rgba(47, 106, 75, 0.22);
   border-color: var(--green-700);
 }
@@ -237,12 +300,6 @@ button {
   transform: translateY(1px);
 }
 
-.categoryGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
 .categoryButton {
   padding: 0 10px;
   border: 1px solid #bfd0c7;
@@ -255,6 +312,63 @@ button {
   border-color: var(--green-700);
   color: #ffffff;
   background: var(--green-700);
+}
+
+.sidebarBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  background: rgba(17, 31, 24, 0.44);
+}
+
+.categorySidebar {
+  width: min(86vw, 360px);
+  height: 100%;
+  overflow-y: auto;
+  padding: 18px;
+  border-right: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: 18px 0 50px rgba(13, 31, 22, 0.22);
+}
+
+.categoryAddForm {
+  margin-bottom: 14px;
+}
+
+.addModalCategoryForm {
+  margin-bottom: 0;
+  padding: 12px;
+  border: 1px dashed #adc5b8;
+  border-radius: 8px;
+  background: #f7fbf8;
+}
+
+.categoryInputRow {
+  display: grid;
+  grid-template-columns: 1fr 54px;
+  gap: 8px;
+}
+
+.categoryInputRow button {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background: var(--green-700);
+}
+
+.categoryList {
+  display: grid;
+  gap: 8px;
+}
+
+.categoryList .categoryButton {
+  justify-content: flex-start;
+  min-height: 48px;
+  padding: 0 14px;
 }
 
 .summary {
@@ -379,7 +493,34 @@ button {
   font-size: 1.14rem;
 }
 
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  overflow-y: auto;
+  padding: 18px 14px;
+  background: rgba(17, 31, 24, 0.48);
+}
+
+.modalPanel {
+  width: min(100%, 720px);
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 24px 70px rgba(13, 31, 22, 0.25);
+}
+
 @media (min-width: 720px) {
+  .topActions {
+    margin: -34px -24px 0;
+    padding: 14px 24px;
+  }
+
   .appShell {
     padding: 34px 24px 56px;
   }
@@ -408,8 +549,12 @@ button {
     min-width: 230px;
   }
 
-  .categoryGrid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+  .categoryList {
+    grid-template-columns: 1fr;
+  }
+
+  .addModalCategoryForm {
+    grid-column: 1 / -1;
   }
 
   .phraseList {
