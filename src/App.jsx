@@ -153,6 +153,8 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [officialPhrases, setOfficialPhrases] = useState([]);
   const [pendingSubmissions, setPendingSubmissions] = useState(loadPendingSubmissions);
+  const [canSyncPendingWithSheet, setCanSyncPendingWithSheet] = useState(false);
+  const [sheetRowIds, setSheetRowIds] = useState([]);
   const [customCategories, setCustomCategories] = useState([]);
   const [lastUpdated, setLastUpdated] = useState('');
   const [loadState, setLoadState] = useState('loading');
@@ -199,12 +201,27 @@ function App() {
           return;
         }
 
+        const syncRowIds = Array.isArray(result.sheetRowIds) ? result.sheetRowIds : result.data;
+        const cloudRowIds = new Set(
+          syncRowIds
+            .map((phrase) =>
+              typeof phrase === 'string' ? phrase.trim() : String(phrase.id || '').trim(),
+            )
+            .filter(Boolean),
+        );
         const cloudPhrases = result.data
           .filter(isApproved)
           .map((phrase) => normalizePhrase(phrase, 'cloud'))
           .filter((phrase) => phrase.vietnamese && phrase.chinese);
 
         setOfficialPhrases(cloudPhrases);
+        setCanSyncPendingWithSheet(result.syncPending === true);
+        setSheetRowIds(Array.from(cloudRowIds));
+        if (result.syncPending === true) {
+          setPendingSubmissions((current) =>
+            current.filter((phrase) => cloudRowIds.has(phrase.id)),
+          );
+        }
         setLastUpdated(formatLastUpdated(result.lastUpdated));
         setLoadState('cloud');
       } catch {
@@ -217,6 +234,8 @@ function App() {
             .map((phrase) => normalizePhrase(phrase, 'fallback'))
             .filter((phrase) => phrase.vietnamese && phrase.chinese),
         );
+        setCanSyncPendingWithSheet(false);
+        setSheetRowIds([]);
         setLastUpdated('');
         setLoadState('fallback');
         setLoadMessage('目前無法載入雲端教材，請稍後再試。');
@@ -238,14 +257,16 @@ function App() {
     const officialIds = new Set(officialPhrases.map((phrase) => phrase.id));
     const officialKeys = new Set(officialPhrases.map(getPhraseKey));
     const officialTextKeys = new Set(officialPhrases.map(getComparableTextKey));
+    const syncedSheetRowIds = new Set(sheetRowIds);
 
     return pendingSubmissions.filter(
       (phrase) =>
+        (!canSyncPendingWithSheet || syncedSheetRowIds.has(phrase.id)) &&
         !officialIds.has(phrase.id) &&
         !officialKeys.has(getPhraseKey(phrase)) &&
         !officialTextKeys.has(getComparableTextKey(phrase)),
     );
-  }, [officialPhrases, pendingSubmissions]);
+  }, [officialPhrases, pendingSubmissions, canSyncPendingWithSheet, sheetRowIds]);
 
   const allPhrases = useMemo(() => {
     return [...officialPhrases, ...visiblePendingSubmissions];
@@ -367,7 +388,7 @@ function App() {
 
       const pendingPhrase = normalizePhrase(
         {
-          id: result.id || `pending-${Date.now()}`,
+          id: result.item?.id || result.id || `pending-${Date.now()}`,
           category: payload.category,
           vietnamese: payload.vietnamese,
           chinese: payload.chinese,
@@ -387,7 +408,7 @@ function App() {
         passphrase: '',
       });
       setSubmitState('success');
-      setSubmitMessage(result.message || '已送出，這筆資料會先顯示為待審核測試。');
+      setSubmitMessage(result.message || '已送出，這筆資料會先顯示為待審核。');
       setIsAddModalOpen(false);
     } catch (error) {
       setSubmitState('error');
@@ -504,12 +525,12 @@ function App() {
 
       <section className="summary" aria-live="polite">
         <CheckCircle2 size={18} />
-        目前顯示 {filteredPhrases.length} 句，正式教材 {officialPhrases.length} 句，待審核測試 {visiblePendingSubmissions.length} 句
+        目前顯示 {filteredPhrases.length} 句，正式教材 {officialPhrases.length} 句，待審核 {visiblePendingSubmissions.length} 句
       </section>
 
       {visiblePendingSubmissions.length > 0 && (
         <p className="pendingHint">
-          待審核測試只顯示在這個瀏覽器中，不代表正式上架。
+          待審核資料只顯示在這個瀏覽器中，不代表正式上架。
         </p>
       )}
 
@@ -519,7 +540,7 @@ function App() {
             <div className="cardHeader">
               <span className="categoryPill">{phrase.category}</span>
               {phrase.source === 'pending' ? (
-                <span className="reviewBadge">待審核測試</span>
+                <span className="reviewBadge">待審核</span>
               ) : (
                 <span className="cloudBadge">
                   {phrase.source === 'fallback' ? '本機備援' : '正式教材'}
