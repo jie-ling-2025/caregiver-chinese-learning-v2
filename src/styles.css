@@ -515,6 +515,19 @@ button {
   box-shadow: 0 24px 70px rgba(13, 31, 22, 0.25);
 }
 
+.site-footer {
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+  padding: 12px 4px 0;
+  color: #65736c;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.site-footer p {
+  margin: 0 0 3px;
+}
+
 @media (min-width: 720px) {
   .topActions {
     margin: -34px -24px 0;

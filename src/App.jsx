@@ -683,6 +683,13 @@ function App() {
           </section>
         </div>
       )}
+
+      <footer className="site-footer">
+        <p>© 2026 Jie-Ling. All rights reserved.</p>
+        <p>網站企劃、介面設計與建置：Jie-Ling｜教材原始句型提供：Yi-Rong</p>
+        <p>本網站僅供語言學習與長照現場溝通輔助參考使用。</p>
+        <p>未經授權請勿轉載或商業使用。</p>
+      </footer>
     </main>
   );
 }
